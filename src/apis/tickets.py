@@ -43,7 +43,7 @@ def purchase(token: TokenModel = Depends(with_auth), data: PurchaseRequestModel 
     except ValueError:
         return HTTPException(status_code=404, detail="service.notfound")
 
-    ticket = TicketModel(service=data.service, usesMax=data.count, usesLeft=data.count, owner=token.id,
+    ticket = TicketModel(service=data.service, uses=data.count, owner=token.id,
                          createdAt=time.time(), expiresAt=time.time() + serv.expireTime)
 
     tickets.insert_one(ticket.dict())

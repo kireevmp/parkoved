@@ -24,14 +24,13 @@ class TicketModel(BaseModel):
         min_length=16,
     )
 
-    usesMax: int = Field(
-        description="Максимальное количество использований",
-        ge=1,
-    )
-
-    usesLeft: int = Field(
+    uses: int = Field(
         description="Оставшееся количество использований билета",
         ge=0,
+    )
+
+    isForChild: bool = Field(
+        description="Является ли билет детским",
     )
 
     owner: str = Field(

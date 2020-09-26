@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any
+from typing import Any, Union, List
 
 from nanoid import generate as nanoid
 from pydantic import BaseModel, Field
@@ -8,8 +8,17 @@ from pydantic import BaseModel, Field
 class ServiceType(str, Enum):
     cafe = "cafe"
     space = "space"
-    park = "park"
+    # park = "park"
     attraction = "attraction"
+
+
+class ServicePosition(BaseModel):
+    lat: float = Field(
+        description="Широта"
+    )
+    lon: float = Field(
+        description="Долгота"
+    )
 
 
 class ServiceModel(BaseModel):
@@ -59,7 +68,23 @@ class ServiceModel(BaseModel):
         ge=0
     )
 
-    priceChildren: int = Field(
+    priceChildren: Union[int, None] = Field(
         description="Цена детского билета",
-        ge=0
+        ge=0,
+    )
+
+    picture: List[str] = Field(
+        description="Ссылки на картинки этого места"
+    )
+
+    desc: str = Field(
+        description="Краткое описание (1 предложение)"
+    )
+
+    longDesc: str = Field(
+        description="Длинное описание"
+    )
+
+    position: ServicePosition = Field(
+        description="Местоположение сервиса"
     )
