@@ -24,7 +24,20 @@ def with_auth(authorization: str = Header(None)):
     try:
         bearer, token = authorization.split(" ")
         assert bearer.lower() == "bearer"
-        data = parse_obj_as(TokenModel, jwt.decode(token, key=os.getenv("SECRET")))
+        data: TokenModel = parse_obj_as(TokenModel, jwt.decode(token, key=os.getenv("SECRET")))
+        assert data.role == UserRole.user
+    except (AssertionError, jwt.InvalidTokenError, ValueError):
+        raise HTTPException(status_code=400, detail="token.invalid")
+
+    return data
+
+
+def with_admin_auth(authorization: str = Header(None)):
+    try:
+        bearer, token = authorization.split(" ")
+        assert bearer.lower() == "bearer"
+        data: TokenModel = parse_obj_as(TokenModel, jwt.decode(token, key=os.getenv("SECRET")))
+        assert data.role == UserRole.admin
     except (AssertionError, jwt.InvalidTokenError, ValueError):
         raise HTTPException(status_code=400, detail="token.invalid")
 

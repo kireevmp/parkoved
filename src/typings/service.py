@@ -4,6 +4,8 @@ from typing import Any, Union, List
 from nanoid import generate as nanoid
 from pydantic import BaseModel, Field
 
+from ..lib.typings import Clonable
+
 
 class ServiceType(str, Enum):
     cafe = "cafe"
