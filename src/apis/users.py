@@ -1,7 +1,7 @@
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException, Body
-from pydantic import parse_obj_as, BaseModel, Field
+from pydantic import parse_obj_as, BaseModel, Field, EmailStr
 
 from .common import pwd_ctx
 from ..db import users, admins
@@ -21,6 +21,28 @@ def me(token: TokenModel = Depends(with_auth)):
         raise HTTPException(status_code=404, detail="user.notfound")
 
     return user
+
+
+class PersonalInfoRequestModel(BaseModel):
+    name: str = Field(
+        description="Имя человека"
+    )
+    email: EmailStr = Field(
+        description="Мыло человека"
+    )
+
+
+@router.post("/me", name="Set Info", description="Установить данные о себе при первом входе")
+def set_me(token: TokenModel = Depends(with_auth()), data: PersonalInfoRequestModel = Body(..., embed=False)):
+    users.update_one({
+        "uid": token.id
+    }, {
+        "$set": data.dict()
+    })
+
+    return {
+        "success": True
+    }
 
 
 class CreateAdminRequestModel(BaseModel):

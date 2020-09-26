@@ -1,7 +1,7 @@
-from typing import Any
+from typing import Any, Optional
 
 from nanoid import generate as nanoid
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr
 
 
 class UserModel(BaseModel):
@@ -20,3 +20,18 @@ class UserModel(BaseModel):
     phone: str = Field(
         description="Телефон пользователя"
     )
+
+    name: Optional[str] = Field(
+        description="Имя пользователя",
+        default=...
+    )
+
+    email: Optional[EmailStr] = Field(
+        default=...,
+        description="Мыло пользователя"
+    )
+
+    # notifications: bool = Field(
+    #     default=False,
+    #     description="Получать ли уведомления"
+    # )
