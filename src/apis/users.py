@@ -33,7 +33,7 @@ class PersonalInfoRequestModel(BaseModel):
 
 
 @router.post("/me", name="Set Info", description="Установить данные о себе при первом входе")
-def set_me(token: TokenModel = Depends(with_auth()), data: PersonalInfoRequestModel = Body(..., embed=False)):
+def set_me(token: TokenModel = Depends(with_auth), data: PersonalInfoRequestModel = Body(..., embed=False)):
     users.update_one({
         "uid": token.id
     }, {
