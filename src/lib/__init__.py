@@ -6,15 +6,16 @@ from fastapi import Header, HTTPException
 from nanoid import generate as nanoid
 from pydantic import parse_obj_as
 
-from ..typings.token import TokenModel
+from ..typings.token import TokenModel, UserRole
 
 JWT_TIME = 1000 * 60 * 60 * 24 * 30
 
 
-def build_jwt(uid: str):
+def build_jwt(uid: str, role: UserRole):
     return jwt.encode({
-        "uid": uid,
+        "id": uid,
         "jti": nanoid(),
+        "role": role,
         "exp": time.time() * 1000 + JWT_TIME
     }, key=os.getenv("SECRET"))
 
