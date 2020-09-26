@@ -34,6 +34,7 @@ class ChangeServiceResponseModel(BaseModel):
 @router.post("/", response_model=ChangeServiceResponseModel, name="Create Service")
 def create_service(park: str = Query(...), service: ChangeServiceModel = Body(..., embed=False),
                    ):
+    # TODO: add with_admin_auth
     services.insert_one({
         **service.dict(),
         "park": park
@@ -46,6 +47,7 @@ def create_service(park: str = Query(...), service: ChangeServiceModel = Body(..
 def update_service(service_id: str = Query(...),
                    service: ChangeServiceModel = Body(..., embed=False),
                    ):
+    # TODO: add with_admin_auth
     services.update_one({"sid": service_id}, {"$set": {**service.dict(exclude_none=True)}})
 
     return {"success": True}

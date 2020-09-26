@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Body, HTTPException
 from pydantic import BaseModel, Field
+from pymongo import ReturnDocument
 
 from .common import pwd_ctx
 from ..db import users, admins
@@ -31,6 +32,7 @@ def register(data: RegisterRequestModel = Body(..., embed=False)):
 
 class ConfirmResponseModel(BaseModel):
     token: str
+    isNew: bool
 
 
 class ConfirmRequestModel(BaseModel):
@@ -45,15 +47,18 @@ class ConfirmRequestModel(BaseModel):
 
 @router.post("/confirm", name="Confirm Phone", response_model=ConfirmResponseModel, status_code=201)
 def confirm(data: ConfirmRequestModel = Body(..., embed=False)):
-    user = UserModel(phone=data.phone)
-    users.update_one({
-        "phone": data.phone
-    }, {
-        "$setOnInsert": user.dict()
-    }, upsert=True)
+    tmp = UserModel(phone=data.phone)
+    user: UserModel = UserModel.parse_obj(
+        users.find_one_and_update({
+            "phone": data.phone
+        }, {
+            "$setOnInsert": tmp.dict()
+        }, upsert=True, return_document=ReturnDocument.AFTER)
+    )
 
     return {
-        "token": build_jwt(user.uid, UserRole.user)
+        "token": build_jwt(user.uid, UserRole.user),
+        "isNew": tmp.uid == user.uid
     }
 
 
