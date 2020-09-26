@@ -26,6 +26,6 @@ def with_auth(authorization: str = Header(None)):
         assert bearer.lower() == "bearer"
         data = parse_obj_as(TokenModel, jwt.decode(token, key=os.getenv("SECRET")))
     except (AssertionError, jwt.InvalidTokenError, ValueError):
-        return HTTPException(status_code=400, detail="token.invalid")
+        raise HTTPException(status_code=400, detail="token.invalid")
 
     return data

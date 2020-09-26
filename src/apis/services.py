@@ -16,6 +16,6 @@ def get_services(park: str, token: TokenModel = Depends(with_auth)):
     try:
         serv = parse_obj_as(List[ServiceModel], [*services.find({"park": park})])
     except ValueError:
-        return HTTPException(status_code=404, detail="park.notfound")
+        raise HTTPException(status_code=404, detail="park.notfound")
 
     return serv

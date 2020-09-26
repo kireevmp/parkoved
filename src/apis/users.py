@@ -18,7 +18,7 @@ def me(token: TokenModel = Depends(with_auth)):
     try:
         user = parse_obj_as(UserModel, users.find_one({"uid": token.id}))
     except ValueError:
-        return HTTPException(status_code=404, detail="user.notfound")
+        raise HTTPException(status_code=404, detail="user.notfound")
 
     return user
 
@@ -47,7 +47,7 @@ class CreateAdminResponseModel(BaseModel):
 @router.post("/admin/create")
 def create_admin(data: CreateAdminRequestModel = Body(..., embed=False)):
     if admins.find_one({"login": data.login}) is not None:
-        return HTTPException(status_code=409, detail="login.exists")
+        raise HTTPException(status_code=409, detail="login.exists")
 
     admin = AdminModel(parks=data.parks, password=pwd_ctx.hash(data.password), login=data.login)
 

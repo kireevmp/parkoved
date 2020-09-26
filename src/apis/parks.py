@@ -16,6 +16,6 @@ def list_parks(token: TokenModel = Depends(with_auth)):
     try:
         data = parse_obj_as(List[ParkModel], [*parks.find({})])
     except ValueError:
-        return HTTPException(status_code=404, detail="unknown")
+        raise HTTPException(status_code=404, detail="unknown")
 
     return data

@@ -70,7 +70,7 @@ class AdminLoginResponseModel(BaseModel):
 def login(data: AdminLoginRequestModel = Body(..., embed=False)):
     user: AdminModel = AdminModel.parse_obj(admins.find_one({"login": data.login}))
     if user is None or not pwd_ctx.verify(data.password, user.password):
-        return HTTPException(status_code=403, detail="data.wrong")
+        raise HTTPException(status_code=403, detail="data.wrong")
 
     return {
         "token": build_jwt(user.uid, UserRole.admin)
