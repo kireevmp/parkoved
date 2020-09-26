@@ -1,0 +1,8 @@
+nanoid
+pydantic
+fastapi
+uvicorn
+pymongo
+python-dotenv
+pyjwt
+dnspython
