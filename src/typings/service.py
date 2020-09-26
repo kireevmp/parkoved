@@ -5,7 +5,7 @@ from nanoid import generate as nanoid
 from pydantic import BaseModel, Field
 
 
-class ServiceType(Enum):
+class ServiceType(str, Enum):
     cafe = "cafe"
     space = "space"
     park = "park"
