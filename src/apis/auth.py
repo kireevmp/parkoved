@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Body, HTTPException
-from passlib.context import CryptContext
 from pydantic import BaseModel, Field
 
+from .common import pwd_ctx
 from ..db import users, admins
 from ..lib import build_jwt
 from ..typings.admin import AdminModel
@@ -9,7 +9,6 @@ from ..typings.token import UserRole
 from ..typings.user import UserModel
 
 router = APIRouter()
-pwd_ctx = CryptContext(schemes=["bcrypt"])
 
 
 class RegisterResponseModel(BaseModel):

@@ -16,7 +16,7 @@ router = APIRouter()
 @router.get("/", response_model=List[TicketModel], response_model_exclude={"_id"}, name="My Tickets")
 def mine(token: TokenModel = Depends(with_auth)):
     try:
-        data = parse_obj_as(List[TicketModel], [*tickets.find({"owner": token.uid})])
+        data = parse_obj_as(List[TicketModel], [*tickets.find({"owner": token.id})])
     except ValueError:
         return HTTPException(status_code=404, detail="user.notfound")
 
@@ -43,7 +43,7 @@ def purchase(token: TokenModel = Depends(with_auth), data: PurchaseRequestModel 
     except ValueError:
         return HTTPException(status_code=404, detail="service.notfound")
 
-    ticket = TicketModel(service=data.service, usesMax=data.count, usesLeft=data.count, owner=token.uid,
+    ticket = TicketModel(service=data.service, usesMax=data.count, usesLeft=data.count, owner=token.id,
                          createdAt=time.time(), expiresAt=time.time() + serv.expireTime)
 
     tickets.insert_one(ticket.dict())
