@@ -73,7 +73,7 @@ class ServiceModel(BaseModel):
         ge=0,
     )
 
-    picture: List[str] = Field(
+    pictures: List[str] = Field(
         description="Ссылки на картинки этого места"
     )
 
