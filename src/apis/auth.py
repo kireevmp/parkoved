@@ -48,12 +48,14 @@ class ConfirmRequestModel(BaseModel):
 @router.post("/confirm", name="Confirm Phone", response_model=ConfirmResponseModel, status_code=201)
 def confirm(data: ConfirmRequestModel = Body(..., embed=False)):
     tmp = UserModel(phone=data.phone, name=None, email=None)
-    user: UserModel = UserModel.parse_obj(
-        users.find_one_and_update({
+    user: UserModel = UserModel(
+        **users.find_one_and_update({
             "phone": data.phone
         }, {
             "$setOnInsert": tmp.dict()
-        }, upsert=True, return_document=ReturnDocument.AFTER)
+        }, upsert=True, return_document=ReturnDocument.AFTER),
+        name=None,
+        email=None,
     )
 
     return {
