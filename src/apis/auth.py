@@ -18,7 +18,7 @@ class RegisterRequestModel(BaseModel):
     )
 
 
-@router.post("/register", response_model=RegisterResponseModel, name="Request Code")
+@router.post("/register", response_model=RegisterResponseModel, name="Request Code", status_code=202)
 def register(data: RegisterRequestModel = Body(..., embed=False)):
     return {
         "success": True
@@ -39,11 +39,11 @@ class ConfirmRequestModel(BaseModel):
     )
 
 
-@router.post("/confirm", name="Confirm Phone", response_model=ConfirmResponseModel)
+@router.post("/confirm", name="Confirm Phone", response_model=ConfirmResponseModel, status_code=201)
 def confirm(data: ConfirmRequestModel = Body(..., embed=False)):
     phone = data.phone
-    if users.find_one({"phone": phone}) is not None:
-        raise HTTPException(status_code=409, detail="phone.exists")
+    if users.find_one({"phone": phone}) is None:
+        raise HTTPException(status_code=409, detail="phone.notexists")
 
     user = UserModel(phone=phone)
     users.insert_one(user.dict())

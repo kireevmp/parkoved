@@ -1,7 +1,15 @@
+from enum import Enum
 from typing import Any
 
 from nanoid import generate as nanoid
 from pydantic import BaseModel, Field
+
+
+class ServiceType(Enum):
+    cafe = "cafe"
+    space = "space"
+    park = "park"
+    attraction = "attraction"
 
 
 class ServiceModel(BaseModel):
@@ -22,13 +30,17 @@ class ServiceModel(BaseModel):
         min_length=16,
     )
 
+    kind: ServiceType = Field(
+        description="Вид сервиса (кафе, пространство, аттракцион или билет в сам парк)"
+    )
+
     name: str = Field(
         description="Видимое для пользователя название услуги",
         min_length=1,
     )
 
     expireTime: int = Field(
-        description="Время действия купленного билета в секундах",
+        description="Время действия купленного билета в секундах (со времени покупки)",
         gt=1,
     )
 
@@ -39,5 +51,15 @@ class ServiceModel(BaseModel):
 
     ageLimit: int = Field(
         description="Ограничение возраста",
+        ge=0
+    )
+
+    priceAdults: int = Field(
+        description="Цена взрослого билета",
+        ge=0
+    )
+
+    priceChildren: int = Field(
+        description="Цена детского билета",
         ge=0
     )

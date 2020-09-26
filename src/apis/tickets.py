@@ -36,7 +36,7 @@ class PurchaseRequestModel(BaseModel):
     )
 
 
-@router.post("/", response_model=TicketModel, response_model_exclude={"_id"}, name="Purchase Ticket")
+@router.post("/", response_model=TicketModel, response_model_exclude={"_id"}, name="Purchase Ticket", status_code=201)
 def purchase(token: TokenModel = Depends(with_auth), data: PurchaseRequestModel = Body(..., embed=False)):
     try:
         serv: ServiceModel = parse_obj_as(ServiceModel, services.find_one({"sid": data.service}))
